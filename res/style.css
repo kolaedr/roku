@@ -1,0 +1,79 @@
+
+
+
+main{
+    width: 80%;
+    margin: 0 auto;
+}
+
+.btn{
+    padding: 1rem 1.5rem;
+    min-width: 7rem;
+    background-color: aliceblue;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn:hover{
+    background-color: wheat;
+}
+.user-image{
+    width: 3rem;
+    margin: 0 .5rem;
+
+}
+
+.item{
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+    margin: .5rem 0;
+    padding: .5rem;
+}
+
+.account-list{
+    display: flex;
+    box-shadow: 0px 0px 4px grey;
+    padding: 1rem;
+    /* min-height: 10rem; */
+    height: 13rem;
+}
+
+.account-list>div:first-child{
+    flex: 1;
+}
+
+.account-list>div:last-child{
+    flex: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.account-add{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    /* min-height: 10rem; */
+    height: 13rem;
+    box-shadow: 0px 0px 4px grey;
+}
+
+.account-add>span{
+    margin: 1rem 0;
+}
+.account-add input{
+    width: 100%;
+    padding: .5rem;
+}
+.focus, .item:hover{
+    background-color: orange;
+    border-radius: 16px;
+}
+
+.hidden{
+    display: none;
+}
