@@ -12,20 +12,33 @@ data = {
             "title": "Matrix 3",
             "img": "./images/user.png"
         },
+        {
+            "title": "Matrix 1",
+            "img": "./images/user.png"
+        },
+        {
+            "title": "Matrix 2",
+            "img": "./images/user.png"
+        },
+        {
+            "title": "Matrix 3",
+            "img": "./images/user.png"
+        },
     ]
 };
 
 function userAccount(data, id = 0) {
     console.log('id :>> ', id);
+
     let list = '';
     data.forEach((element, index) => {
-        list += `<div class="item ${index == 0 && id == 0 ? 'focus' : ''} ${id == index ? 'focus' : ''}" data-id=${index}>
+        list += `<div class="item ${index == 0 && id == 0 ? 'focus' : id == index && id != -1 ? 'focus' : ''} " data-id=${index}>
                 <img src="${element.img}" alt="" class="user-image">
                 <span class="title">${element.title}</span>
             </div>`;
     });
-
     document.querySelector('.items').innerHTML = list;
+    document.querySelector('.items').scrollTo(0, 0);
 }
 
 userAccount(data.accounts);
@@ -53,7 +66,7 @@ document.addEventListener('keydown', function (event) {
 var index = 0;
 
 function leftPress() {
-    if (document.querySelector('.add-block .btn').classList.contains('focus')) {
+    if (document.querySelector('.add-block .btn').classList.contains('focus') && !document.querySelector('.account-list').classList.contains('hidden')) {
         for (const iterator of document.querySelectorAll('.item')) {
             if (iterator.dataset.id === index) {
                 iterator.classList.add('focus');
@@ -65,12 +78,8 @@ function leftPress() {
             if (iterator.classList.contains('focus')) {
 
                 if (iterator.previousElementSibling) {
-                    // iterator.previousElementSibling.classList.add('focus');
-                    // iterator.remove();
-
-                    // delete data.accounts[iterator.dataset.id];
                     data.accounts.splice(iterator.dataset.id, 1);
-                    if (data.accounts.length==1) {
+                    if (data.accounts.length == 1) {
                         userAccount(data.accounts);
                         return;
                     }
@@ -78,17 +87,11 @@ function leftPress() {
 
                     return;
                 } else if (iterator.nextElementSibling) {
-                    // iterator.nextElementSibling.classList.add('focus');
-                    // iterator.remove();
-
-                    // delete data.accounts[iterator.dataset.id];
                     data.accounts.splice(iterator.dataset.id, 1);
                     userAccount(data.accounts);
 
                     return;
                 } else {
-                    // iterator.remove();
-                    // delete data.accounts[iterator.dataset.id];
                     data.accounts.splice(iterator.dataset.id, 1);
                     userAccount(data.accounts);
                     document.querySelector('.add-block .btn').classList.add('focus');
@@ -114,7 +117,9 @@ function rightPress() {
         }
         iterator.classList.remove('focus');
     }
-    document.querySelector('.add-block .btn').classList.add('focus');
+    if (!document.querySelector('.account-list').classList.contains('hidden')) {
+        document.querySelector('.add-block .btn').classList.add('focus');
+    }
 
     if (document.querySelectorAll('.account-add span')[0].classList.contains('focus')) {
         document.querySelectorAll('.account-add span')[0].classList.remove('focus');
@@ -133,9 +138,11 @@ function upPress() {
             iterator.classList.remove('focus');
             if (iterator.previousElementSibling) {
                 iterator.previousElementSibling.classList.add('focus');
+                scroll('down');
                 return;
             } else {
                 iterator.classList.add('focus');
+                scroll('down');
                 return;
             }
         }
@@ -158,9 +165,11 @@ function downPress() {
             iterator.classList.remove('focus');
             if (iterator.nextElementSibling) {
                 iterator.nextElementSibling.classList.add('focus');
+                scroll('up');
                 return;
             } else {
                 iterator.classList.add('focus');
+                scroll('up');
                 return;
             }
         }
@@ -168,48 +177,91 @@ function downPress() {
 
     if (index != -1) {
         document.querySelectorAll('.account-add span')[0].classList.add('focus');
-        // document.querySelectorAll('.account-add span')[1].classList.remove('focus');
+        document.querySelectorAll('.account-add span')[1].classList.remove('focus');
         document.querySelector('.account-add input').blur();
         index = 0;
     } else {
         document.querySelectorAll('.account-add span')[1].classList.add('focus');
         document.querySelectorAll('.account-add span')[0].classList.remove('focus');
         document.querySelector('.account-add input').blur();
-        
+
     }
-    
-    
+
+
 }
 
-function enterPress(){
-    if (document.querySelector('.add-block span').classList.contains('focus')) {
-        document.querySelector('.add-block span').classList.remove('focus');
-        
-        for (const iterator of document.querySelectorAll('main>section')) {
-            iterator.classList.toggle('hidden');
-        }
-        document.querySelector('.account-add input').focus();
-    }
-
-    for (const iterator of document.querySelectorAll('.account-add span')) {
+function enterPress() {
+    for (const iterator of document.querySelectorAll('span[data-action]')) {
         if (iterator.classList.contains('focus')) {
-            console.log('object :>> ', iterator.dataset.action);
             let actions = iterator.dataset.action;
             if (actions) {
-                this[actions](actions);
+                this[actions]();
+                return;
             }
-            
         }
     }
+}
+
+function newUser() {
+    clear();
+    document.querySelector('.account-add input').focus();
+}
+
+function addUser() {
+    if (document.querySelector('.account-add input').value) {
+        let newUser = {
+            "title": document.querySelector('.account-add input').value,
+            "img": "./images/user.png"
+        };
+        data.accounts.push(newUser);
+        clear();
+        userAccount(data.accounts);
+    }else{
+        alert('Put name');
+        document.querySelector('span[data-action=addUser]').classList.remove('focus');
+        document.querySelector('.account-add input').focus();
+    }
     
+
 }
 
-function addUser(x){
-    alert(x);
+function cancel() {
+    clear();
     userAccount(data.accounts);
 }
 
-function cancel(x){
-    alert(x);
-    userAccount(data.accounts);
+function clear() {
+    for (const iterator of document.querySelectorAll('span[data-action]')) {
+        iterator.classList.remove('focus');
+    }
+    for (const iterator of document.querySelectorAll('.item')) {
+        iterator.classList.remove('focus');
+    }
+    // index = 0;
+    for (const iterator of document.querySelectorAll('main>section')) {
+        iterator.classList.toggle('hidden');
+    }
+    document.querySelector('.account-add input').value = '';
+}
+
+function scroll(direction){
+    // .getBoundingClientRect()
+    
+    let itemHeight = document.querySelectorAll('.item')[0].getBoundingClientRect().height;
+        switch (direction) {
+            case "up":
+                document.querySelector('.items').scrollTo({
+                    top: itemHeight,
+                    left: 0,
+                    behavior: 'smooth'
+                  })
+                break;
+            case "down":
+                document.querySelector('.items').scrollTo({
+                    top: -itemHeight,
+                    left: 0,
+                    behavior: 'smooth'
+                  })
+                break;
+        }
 }
