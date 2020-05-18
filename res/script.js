@@ -39,15 +39,13 @@ function LoadUserAccounts(data, id = 0) {
     });
     if (list) {
         document.querySelector('.items').innerHTML = list;
-    }else{
-        document.querySelector('.items').innerHTML = 'No users';
+    } else {
+        document.querySelector('.items').innerHTML = '<h4>No users</h4>';
     }
-    
-    // document.querySelector('.items').scrollTo(0, 0);
-    if (data.length!=0) {
+    if (data.length != 0) {
         scroll();
     }
-    
+
 }
 
 LoadUserAccounts(data.accounts);
@@ -76,7 +74,7 @@ var index = 0;
 var index_adding = 0;
 
 function leftPress() {
-
+    //screen 1
     if (!document.querySelector('.account-list').classList.contains('hidden')) {
         if (document.querySelector('span[data-action=newUser]').classList.contains('focus')) {
             for (const iterator of document.querySelectorAll('.item')) {
@@ -85,122 +83,142 @@ function leftPress() {
                 }
             }
             document.querySelector('span[data-action=newUser]').classList.remove('focus');
-        }
-    }
+        } else {
+            for (const iterator of document.querySelectorAll('.item')) {
+                if (iterator.classList.contains('focus')) {
+                    if (iterator.previousElementSibling) {
+                        data.accounts.splice(iterator.dataset.id, 1);
+                        LoadUserAccounts(data.accounts, iterator.dataset.id - 1);
+                        return;
+                    } else if (iterator.nextElementSibling) {
+                        data.accounts.splice(iterator.dataset.id, 1);
+                        LoadUserAccounts(data.accounts);
+                        return;
+                    } else {
+                        data.accounts.splice(iterator.dataset.id, 1);
+                        LoadUserAccounts(data.accounts);
+                        document.querySelector('span[data-action=newUser]').classList.add('focus');
+                        return;
+                    }
 
-    if (!document.querySelector('.account-add').classList.contains('hidden')) {
-        for (const iterator of document.querySelectorAll('.item')) {
-            if (iterator.classList.contains('focus')) {
-                if (iterator.previousElementSibling) {
-                    data.accounts.splice(iterator.dataset.id, 1);
-                    LoadUserAccounts(data.accounts, iterator.dataset.id - 1);
-                    return;
-                } else if (iterator.nextElementSibling) {
-                    data.accounts.splice(iterator.dataset.id, 1);
-                    LoadUserAccounts(data.accounts);
-                    return;
-                } else {
-                    data.accounts.splice(iterator.dataset.id, 1);
-                    LoadUserAccounts(data.accounts);
-                    document.querySelector('span[data-action=newUser]').classList.add('focus');
-                    return;
                 }
-
             }
         }
+
+    }
+    //screen 2
+    if (!document.querySelector('.account-add').classList.contains('hidden')) {
+        // for (const iterator of document.querySelectorAll('.account-add span[data-action]')) {
+        //     iterator.classList.toggle('focus');
+        //     index_adding = 0;
+        // }
+
+        if (document.querySelectorAll('.account-add span')[1].classList.contains('focus')) {
+            document.querySelectorAll('.account-add span')[1].classList.remove('focus');
+            document.querySelectorAll('.account-add span')[0].classList.add('focus');
+            index_adding = 0;
+        }
     }
 
-    if (document.querySelectorAll('.account-add span')[1].classList.contains('focus')) {
-        document.querySelectorAll('.account-add span')[1].classList.remove('focus');
-        document.querySelectorAll('.account-add span')[0].classList.add('focus');
-        index_adding = 0;
-    }
+
 
 }
 
 function rightPress() {
-    for (const iterator of document.querySelectorAll('.item')) {
-        if (iterator.classList.contains('focus')) {
-            index = iterator.dataset.id;
-        }
-        iterator.classList.remove('focus');
-    }
+    //screen 1
     if (!document.querySelector('.account-list').classList.contains('hidden')) {
-        document.querySelector('.add-block .btn').classList.add('focus');
+        for (const iterator of document.querySelectorAll('.item')) {
+            if (iterator.classList.contains('focus')) {
+                index = iterator.dataset.id;
+            }
+            iterator.classList.remove('focus');
+        }
+        document.querySelector('span[data-action=newUser]').classList.add('focus');
+    }
+    //screen 2
+    if (!document.querySelector('.account-add').classList.contains('hidden')) {
+
+        // for (const iterator of document.querySelectorAll('.account-add span[data-action]')) {
+        //     iterator.classList.toggle('focus');
+        //     index_adding = -1;
+        // }
+
+
+        if (document.querySelectorAll('.account-add span')[0].classList.contains('focus')) {
+            document.querySelectorAll('.account-add span')[0].classList.remove('focus');
+            document.querySelectorAll('.account-add span')[1].classList.add('focus');
+            index_adding = -1;
+        }
     }
 
-    if (document.querySelectorAll('.account-add span')[0].classList.contains('focus')) {
-        document.querySelectorAll('.account-add span')[0].classList.remove('focus');
-        document.querySelectorAll('.account-add span')[1].classList.add('focus');
-        index_adding = -1;
-    }
 }
 
 function upPress() {
-    if (!document.querySelectorAll('.item')) {
-        document.querySelector('.add-block span').classList.add('focus');
-    }
-
-    if (!document.querySelector('.add-block span').classList.contains('focus')) {
-        for (const iterator of document.querySelectorAll('.item')) {
-            if (iterator.classList.contains('focus')) {
-                iterator.classList.remove('focus');
-                if (iterator.previousElementSibling) {
+    //screen 1
+    if (!document.querySelector('.account-list').classList.contains('hidden')) {
+        if (!document.querySelector('.add-block span').classList.contains('focus')) {
+            for (const iterator of document.querySelectorAll('.item')) {
+                if (iterator.classList.contains('focus') && iterator.previousElementSibling) {
+                    iterator.classList.remove('focus');
                     iterator.previousElementSibling.classList.add('focus');
-                    scroll('down');
-                    return;
-                } else {
-                    iterator.classList.add('focus');
                     scroll('down');
                     return;
                 }
             }
         }
     }
+    //screen 2
+    if (!document.querySelector('.account-add').classList.contains('hidden')) {
 
+        // for (const iterator of document.querySelectorAll('.account-add span[data-action]')) {
+        //     iterator.classList.remove('focus');
+        //     index_adding = 0;
+        // }
+        // document.querySelector('.account-add input').focus();
 
-    if (document.querySelectorAll('.account-add span')[0].classList.contains('focus')) {
-        document.querySelectorAll('.account-add span')[0].classList.remove('focus');
-        document.querySelector('.account-add input').focus();
+        if (document.querySelectorAll('.account-add span')[0].classList.contains('focus')) {
+            document.querySelectorAll('.account-add span')[0].classList.remove('focus');
+            document.querySelector('.account-add input').focus();
+        }
+        if (document.querySelectorAll('.account-add span')[1].classList.contains('focus')) {
+            document.querySelectorAll('.account-add span')[1].classList.remove('focus');
+            document.querySelector('.account-add input').focus();
+        }
     }
-    if (document.querySelectorAll('.account-add span')[1].classList.contains('focus')) {
-        document.querySelectorAll('.account-add span')[1].classList.remove('focus');
-        document.querySelector('.account-add input').focus();
-    }
+
 
 }
 
 function downPress() {
-    if (!document.querySelector('.add-block span').classList.contains('focus')) {
-        for (const iterator of document.querySelectorAll('.item')) {
-            if (iterator.classList.contains('focus')) {
-                iterator.classList.remove('focus');
-                if (iterator.nextElementSibling) {
+    //screen 1
+    if (!document.querySelector('.account-list').classList.contains('hidden')) {
+        if (!document.querySelector('.add-block span').classList.contains('focus')) {
+            for (const iterator of document.querySelectorAll('.item')) {
+                if (iterator.classList.contains('focus') && iterator.nextElementSibling) {
+                    iterator.classList.remove('focus');
                     iterator.nextElementSibling.classList.add('focus');
-                    scroll('up');
-                    return;
-                } else {
-                    iterator.classList.add('focus');
                     scroll('up');
                     return;
                 }
             }
         }
     }
+    //screen 2
+    if (!document.querySelector('.account-add').classList.contains('hidden')) {
 
-    if (index_adding != -1) {
-        document.querySelectorAll('.account-add span')[0].classList.add('focus');
-        document.querySelectorAll('.account-add span')[1].classList.remove('focus');
-        document.querySelector('.account-add input').blur();
-        index_adding = 0;
-    } else {
-        document.querySelectorAll('.account-add span')[1].classList.add('focus');
-        document.querySelectorAll('.account-add span')[0].classList.remove('focus');
-        document.querySelector('.account-add input').blur();
+      
+        if (index_adding != -1) {
+            document.querySelectorAll('.account-add span')[0].classList.add('focus');
+            document.querySelectorAll('.account-add span')[1].classList.remove('focus');
+            document.querySelector('.account-add input').blur();
+            index_adding = 0;
+        } else {
+            document.querySelectorAll('.account-add span')[1].classList.add('focus');
+            document.querySelectorAll('.account-add span')[0].classList.remove('focus');
+            document.querySelector('.account-add input').blur();
 
+        }
     }
-
-
 }
 
 function enterPress() {
@@ -234,8 +252,6 @@ function addUser() {
         document.querySelector('span[data-action=addUser]').classList.remove('focus');
         document.querySelector('.account-add input').focus();
     }
-
-
 }
 
 function cancel() {
@@ -270,21 +286,21 @@ function scroll(direction) {
     switch (direction) {
         case "up":
             document.querySelector('.items').scrollTo({
-                top: item-itemsTop-itemHeight,
+                top: item - itemsTop - itemHeight,
                 left: 0,
                 behavior: 'smooth'
             });
             break;
         case "down":
             document.querySelector('.items').scrollTo({
-                top: item-itemsTop-itemHeight,
+                top: item - itemsTop - itemHeight,
                 left: 0,
                 behavior: 'smooth'
             });
             break;
         default:
             document.querySelector('.items').scrollTo({
-                top: item-itemsTop-itemHeight,
+                top: item - itemsTop - itemHeight,
                 left: 0,
                 behavior: 'smooth'
             });
