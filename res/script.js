@@ -33,9 +33,9 @@ function userAccount(data, id = 0) {
     let list = '';
     data.forEach((element, index) => {
         list += `<div class="item ${index == 0 && id == 0 ? 'focus' : id == index && id != -1 ? 'focus' : ''} " data-id=${index}>
-                <img src="${element.img}" alt="" class="user-image">
-                <span class="title">${element.title}</span>
-            </div>`;
+                    <img src="${element.img}" alt="" class="user-image">
+                    <span class="title">${element.title}</span>
+                </div>`;
     });
     document.querySelector('.items').innerHTML = list;
     document.querySelector('.items').scrollTo(0, 0);
@@ -234,6 +234,7 @@ function addUser() {
 function cancel() {
     clear();
     userAccount(data.accounts);
+    index_adding = 0;
 }
 
 function clear() {
@@ -254,9 +255,7 @@ function scroll(direction) {
     // .getBoundingClientRect()
 
     let itemsTop = document.querySelector('.items').getBoundingClientRect().y;
-    let itemsHeight = document.querySelector('.items').getBoundingClientRect().height;
     let itemHeight = document.querySelectorAll('.item')[0].getBoundingClientRect().height;
-    // let item = document.querySelectorAll('.item')[0];
     let itemTop, item;
     for (const iterator of document.querySelectorAll('.item')) {
         if (iterator.classList.contains('focus')) {
@@ -266,29 +265,18 @@ function scroll(direction) {
     }
     switch (direction) {
         case "up":
-            // console.log('itemsTop u:>> ', itemsTop);
-            // console.log('itemHeight u:>> ', itemHeight);
-            // console.log('item u:>> ', item);
-            // if (item > itemsTop+itemHeight) {
             document.querySelector('.items').scrollTo({
                 top: item-itemsTop-itemHeight,
                 left: 0,
                 behavior: 'smooth'
             });
-            // }
-
             break;
         case "down":
-            // console.log('itemsTop d:>> ', itemsTop);
-            // console.log('itemHeight d:>> ', itemHeight);
-            // console.log('item d:>> ', item);
-            // if (item < itemsTop+itemHeight) {
                 document.querySelector('.items').scrollTo({
                     top: item-itemsTop-itemHeight,
                     left: 0,
                     behavior: 'smooth'
-                })
-            // }
+                });
             break;
     }
 }
