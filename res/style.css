@@ -4,16 +4,19 @@
 main{
     width: 80%;
     margin: 0 auto;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .btn{
     padding: 1rem 1.5rem;
     min-width: 7rem;
-    background-color: aliceblue;
+    background-color: #607D8B;
     border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: white;
+    font-weight: 700;
 }
 .btn:hover{
     background-color: wheat;
@@ -26,6 +29,7 @@ main{
 
 .item{
     display: flex;
+    
     /* justify-content: center; */
     align-items: center;
     /* margin: .5rem 0; */
@@ -73,6 +77,8 @@ main{
 .focus, .item:hover{
     background-color: orange;
     border-radius: 16px;
+    font-weight: 700;
+    color: white;
 }
 
 .hidden{
