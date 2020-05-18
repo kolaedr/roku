@@ -23,25 +23,34 @@ data = {
         {
             "title": "Matrix 6",
             "img": "./images/user.png"
-        },
+        }
     ]
 };
 
-function userAccount(data, id = 0) {
-    console.log('id :>> ', id);
-
+//render users list
+function LoadUserAccounts(data, id = 0) {
     let list = '';
     data.forEach((element, index) => {
-        list += `<div class="item ${index == 0 && id == 0 ? 'focus' : id == index && id != -1 ? 'focus' : ''} " data-id=${index}>
+        let hasFocus = (index == 0 && id == 0) || id == index;
+        list += `<div class="item${hasFocus ? ' focus' : ''} " data-id=${index}>
                     <img src="${element.img}" alt="" class="user-image">
                     <span class="title">${element.title}</span>
                 </div>`;
     });
-    document.querySelector('.items').innerHTML = list;
-    document.querySelector('.items').scrollTo(0, 0);
+    if (list) {
+        document.querySelector('.items').innerHTML = list;
+    }else{
+        document.querySelector('.items').innerHTML = 'No users';
+    }
+    
+    // document.querySelector('.items').scrollTo(0, 0);
+    if (data.length!=0) {
+        scroll();
+    }
+    
 }
 
-userAccount(data.accounts);
+LoadUserAccounts(data.accounts);
 
 document.addEventListener('keydown', function (event) {
     switch (event.key) {
@@ -67,35 +76,33 @@ var index = 0;
 var index_adding = 0;
 
 function leftPress() {
-    if (document.querySelector('.add-block .btn').classList.contains('focus') && !document.querySelector('.account-list').classList.contains('hidden')) {
-        for (const iterator of document.querySelectorAll('.item')) {
-            if (iterator.dataset.id === index) {
-                iterator.classList.add('focus');
+
+    if (!document.querySelector('.account-list').classList.contains('hidden')) {
+        if (document.querySelector('span[data-action=newUser]').classList.contains('focus')) {
+            for (const iterator of document.querySelectorAll('.item')) {
+                if (iterator.dataset.id === index) {
+                    iterator.classList.add('focus');
+                }
             }
+            document.querySelector('span[data-action=newUser]').classList.remove('focus');
         }
-        document.querySelector('.add-block .btn').classList.remove('focus');
-    } else {
+    }
+
+    if (!document.querySelector('.account-add').classList.contains('hidden')) {
         for (const iterator of document.querySelectorAll('.item')) {
             if (iterator.classList.contains('focus')) {
-
                 if (iterator.previousElementSibling) {
                     data.accounts.splice(iterator.dataset.id, 1);
-                    if (data.accounts.length == 1) {
-                        userAccount(data.accounts);
-                        return;
-                    }
-                    userAccount(data.accounts, iterator.dataset.id - 1);
-
+                    LoadUserAccounts(data.accounts, iterator.dataset.id - 1);
                     return;
                 } else if (iterator.nextElementSibling) {
                     data.accounts.splice(iterator.dataset.id, 1);
-                    userAccount(data.accounts);
-
+                    LoadUserAccounts(data.accounts);
                     return;
                 } else {
                     data.accounts.splice(iterator.dataset.id, 1);
-                    userAccount(data.accounts);
-                    document.querySelector('.add-block .btn').classList.add('focus');
+                    LoadUserAccounts(data.accounts);
+                    document.querySelector('span[data-action=newUser]').classList.add('focus');
                     return;
                 }
 
@@ -221,7 +228,7 @@ function addUser() {
         };
         data.accounts.push(newUser);
         clear();
-        userAccount(data.accounts);
+        LoadUserAccounts(data.accounts);
     } else {
         alert('Put name');
         document.querySelector('span[data-action=addUser]').classList.remove('focus');
@@ -233,7 +240,7 @@ function addUser() {
 
 function cancel() {
     clear();
-    userAccount(data.accounts);
+    LoadUserAccounts(data.accounts);
     index_adding = 0;
 }
 
@@ -244,7 +251,6 @@ function clear() {
     for (const iterator of document.querySelectorAll('.item')) {
         iterator.classList.remove('focus');
     }
-    // index = 0;
     for (const iterator of document.querySelectorAll('main>section')) {
         iterator.classList.toggle('hidden');
     }
@@ -252,8 +258,6 @@ function clear() {
 }
 
 function scroll(direction) {
-    // .getBoundingClientRect()
-
     let itemsTop = document.querySelector('.items').getBoundingClientRect().y;
     let itemHeight = document.querySelectorAll('.item')[0].getBoundingClientRect().height;
     let itemTop, item;
@@ -272,11 +276,18 @@ function scroll(direction) {
             });
             break;
         case "down":
-                document.querySelector('.items').scrollTo({
-                    top: item-itemsTop-itemHeight,
-                    left: 0,
-                    behavior: 'smooth'
-                });
+            document.querySelector('.items').scrollTo({
+                top: item-itemsTop-itemHeight,
+                left: 0,
+                behavior: 'smooth'
+            });
+            break;
+        default:
+            document.querySelector('.items').scrollTo({
+                top: item-itemsTop-itemHeight,
+                left: 0,
+                behavior: 'smooth'
+            });
             break;
     }
 }

@@ -1,0 +1,28 @@
+{
+    "accounts": [
+        {
+            "title": "Matrix 1",
+            "img": "./images/user.png"
+        },
+        {
+            "title": "Matrix 2",
+            "img": "./images/user.png"
+        },
+        {
+            "title": "Matrix 3",
+            "img": "./images/user.png"
+        },
+        {
+            "title": "Matrix 4",
+            "img": "./images/user.png"
+        },
+        {
+            "title": "Matrix 5",
+            "img": "./images/user.png"
+        },
+        {
+            "title": "Matrix 6",
+            "img": "./images/user.png"
+        }
+    ]
+}
